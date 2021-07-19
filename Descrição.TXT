@@ -8,4 +8,4 @@ Tecnologias utilizadas:
 
 Chart - Utiliza a tag canvas do HTML5, onde pode ser manipulado por JS puro.
 
-Para se adicionar chart:
+
