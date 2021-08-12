@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,61 +8,40 @@
     <title>Conversão das Moedas</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-  
+
+    <header>
+        <section class="conversao">
+            <label for="moedabase">Moeda Base: </label>
+            <select class="moedas" id="moedabase" name="moedabase">
+                <option value="dolar">Dólar</option>
+                <option value="euro">Euro</option>
+                <option value="libra">Libra</option>
+                <option value="real">Real</option>
+            </select>
+        </section>
+        <section class=conversao>
+            <label for="moedaconv">Moeda Convertida: </label>
+            <select class="moedas" id="moedaconv" name="moedaconv">
+                <option value="dolar">Dólar</option>
+                <option value="euro">Euro</option>
+                <option value="libra">Libra</option>
+                <option value="real">Real</option>
+            </select>
+        </section>
+            <button>Converter</button>
+    </header>
+    <section class="exibicao">
+        <section class="exibicao-moeda base"></section>
+        <section class="exibicao-moeda convertida"></section>
+    </section>
+
     <canvas id="myChart" width="90%" height="40%"></canvas>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.min.js">
     </script>
-    <script>
-        fetch('https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,GBP-BRL')
-        .then(res => res.json())
-        .then(data =>{
-            let dados = data;
-            console.log(dados);
-
-            var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: [dados.USDBRL.code + "- Dólar ", dados.EURBRL.code+" - Euro", dados.GBPBRL.code+" - Libra Esterlina"],
-        datasets: [{
-            label: 'Cotação das Moedas',
-            data:[dados.USDBRL.ask, dados.EURBRL.ask, dados.GBPBRL.ask],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
-})
-
-            
-        })
-        .catch(error => console.log('ERROR'))
-
-
-
-    </script>
+    <script src="script.js"> </script>
 </body>
+
 </html>
