@@ -1,6 +1,6 @@
 # Conversão de Moedas
 ## Objetivo 
-Este projeto visa demonstrar gráficos em tempo real das cotações de moedas de diferentes países.
+Este projeto visa demonstrar gráficos em tempo real das cotações de moedas de diferentes países, possibilitando a conversão das moedas.
 
 ## Tecnologias utilizadas:
 - HTML5
