@@ -46,8 +46,8 @@ button:hover{
         width: 30%;
         align-items: center;
     }
-/*    .exibicao{
-        display: none;
-    }*/
+    .exibicao{
+        visibility: hidden;
+    }
     
 }
