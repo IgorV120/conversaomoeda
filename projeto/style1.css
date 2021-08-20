@@ -49,5 +49,12 @@ button:hover{
     .exibicao{
         visibility: hidden;
     }
+    .exibicao>h4{
+        background-color: rgb(9, 94, 51);
+        height: 20px;
+        width: 55px;
+        text-align: center;
+        
+    }
     
 }

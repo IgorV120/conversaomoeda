@@ -1,72 +1,17 @@
 window.requestAnimationFrame(() => {
-  fetch("https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,GBP-BRL")
+  fetch(
+    "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,GBP-BRL,USD-EUR,BRL-EUR,GBP-EUR,USD-GBP,BRL-GBP,EUR-GBP,BRL-USD,EUR-USD,GBP-USD"
+  )
     .then((res) => res.json())
     .then((data) => {
       let dados = data;
 
       var ctx = document.getElementById("myChart").getContext("2d");
-
-      let btnConverte = document.querySelector("button");
-
-      btnConverte.addEventListener("click", () => {
-        let secaoExibe = document.querySelector(".exibicao");
-        secaoExibe.style.visibility = "visible";
-        moedaSelecionada();
-        exibicaoMoeda();
-      });
-
-      function moedaSelecionada() {
-        let selecaoMoeda = Array.from(document.querySelectorAll("select"));
-        selecaoMoeda.forEach((moedaEscolhida) => {
-          let moedaBase =
-            moedaEscolhida.options[moedaEscolhida.selectedIndex].text;
-          comparaMoeda(moedaBase);
-        });
-        function comparaMoeda(moedaSelec) {
-          let valor=0;
-          switch (moedaSelec) {
-            case "Dólar":
-              valor=dados.USDBRL.ask;
-              console.log("Moeda Americana");
-              break;
-            case "Libra":
-              valor=dados.GBPBRL.ask;
-              console.log("Moeda Inglesa");
-              break;
-            case "Euro":
-              valor=dados.EURBRL.ask;
-              console.log("Moeda Europeia");
-              break;
-            case "Real":
-              console.log("Moeda Brasileira");
-              break;
-          }
-        }
-      }
-
-      function exibicaoMoeda() {
-        const exibeMoeda = Array.from(
-          document.querySelectorAll(".exibicao>section")
-        );
-        exibeMoeda.forEach((secaoMoeda) => {
-          secaoMoeda.innerHTML = "";
-          adicionaNomeValor(secaoMoeda);
-        });
-        function adicionaNomeValor(moedaNomeValor) {
-          let nomeMoeda = document.createElement("p");
-          nomeMoeda.innerText = dados.USDBRL.code;
-          let valorMoeda = document.createElement("p");
-          valorMoeda.innerText = dados.USDBRL.ask;
-          moedaNomeValor.append(nomeMoeda);
-          moedaNomeValor.append(valorMoeda);
-        }
-      }
-
       var myChart = new Chart(ctx, {
         type: "bar",
         data: {
           labels: [
-            dados.USDBRL.code + "- Dólar ",
+            dados.USDBRL.code + " - Dólar",
             dados.EURBRL.code + " - Euro",
             dados.GBPBRL.code + " - Libra Esterlina",
           ],
@@ -102,7 +47,124 @@ window.requestAnimationFrame(() => {
           },
         },
       });
-      console.log(myChart.data.labels);
+
+      let btnConverte = document.querySelector("button");
+      var moedasConversao;
+
+      btnConverte.addEventListener("click", () => {
+        
+        moedasConversao = "";
+        limpaSecao()
+        exibicaoMoeda();
+        moedaSelecionada();
+      });
+
+      function limpaSecao(){
+        let limpaSection = document.querySelectorAll(".exibicao>section");
+        limpaSection.forEach((secao)=>{
+          secao.innerHTML=""; 
+        })
+        let limpaTitulo=document.querySelector(".exibicao>h4")
+        if(limpaTitulo!=null){
+          limpaTitulo.remove();
+
+        }
+      }
+
+      function exibicaoMoeda() {
+        const exibeMoeda = Array.from(
+          document.querySelectorAll(".exibicao>section")
+        );
+        exibeMoeda.forEach((secaoMoeda) => {
+          secaoMoeda.innerHTML = "";
+          adicionaNomeValor(secaoMoeda);
+        });
+
+        function adicionaNomeValor(secaoMoeda) {
+          var nomeMoeda = document.createElement("p");
+          var valorMoeda = document.createElement("p");
+          secaoMoeda.append(nomeMoeda);
+          secaoMoeda.append(valorMoeda);
+        }
+      }
+
+      function moedaSelecionada() {
+        let selecaoMoeda = Array.from(document.querySelectorAll("select"));
+        selecaoMoeda.forEach((moedaEscolhida) => {
+          let moedaBase =
+            moedaEscolhida.options[moedaEscolhida.selectedIndex].text;
+          comparaMoeda(moedaBase);
+        });
+
+        function comparaMoeda(moedaSelec) {
+          switch (moedaSelec) {
+            case "Dólar":
+              moedasConversao += "USD";
+              break;
+            case "Libra":
+              moedasConversao += "GBP";
+              break;
+            case "Euro":
+              moedasConversao += "EUR";
+              break;
+            case "Real":
+              moedasConversao += "BRL";
+              break;
+          }
+          if (moedasConversao.length > 4) {
+            let checarMoeda = verificaConversao(moedasConversao);
+            if (checarMoeda) {
+              let secaoExibe = document.querySelector(".exibicao");
+              secaoExibe.style.visibility = "visible";
+              mensagemConversao(
+                moedasConversao.substring(0, moedasConversao.length)
+              );
+            } else {
+              window.alert("Solicitação inválida");
+            }
+          }
+        }
+      }
+
+      function verificaConversao(moeda) {
+        let cheque = true;
+        if (moeda.substring(0, 2) === moeda.substring(3, 5)) {
+          cheque = false;
+        }
+        return cheque;
+      }
+
+      function mensagemConversao(msg) {
+        let conversao;
+        for (let i in dados) {
+          if (i == msg) {
+            conversao = dados[i];
+          }
+        }
+        console.log(conversao.ask);
+        passagemdeValores(conversao, msg);
+      }
+
+      function passagemdeValores(conversao, msg){
+        let titulo = document.createElement("h4");
+        titulo.innerText=msg.substring(3,6);
+        let exibeTitulo = document.querySelector(".exibicao")
+        exibeTitulo.append(titulo)
+        let exibeBase = document.querySelector(".base>p");
+        let exibeConv = document.querySelector(".convertida>p");
+        let quebraLinha = document.createElement("br")
+        let quebraLinha2 = document.createElement("br")
+        let num=1.000;
+        console.log(conversao);
+        exibeBase.append(conversao.code + " - Baixa ");
+        exibeBase.append(quebraLinha2)
+        exibeBase.append(conversao.low);
+        exibeConv.append(conversao.code + " - Alta ");
+        exibeConv.append(quebraLinha)
+        exibeConv.append(conversao.high);
+      }
+
+      
     })
     .catch((error) => console.log("ERROR", error));
 });
