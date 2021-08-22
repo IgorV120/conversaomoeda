@@ -154,8 +154,6 @@ window.requestAnimationFrame(() => {
         let exibeConv = document.querySelector(".convertida>p");
         let quebraLinha = document.createElement("br")
         let quebraLinha2 = document.createElement("br")
-        let num=1.000;
-        console.log(conversao);
         exibeBase.append(conversao.code + " - Baixa ");
         exibeBase.append(quebraLinha2)
         exibeBase.append(conversao.low);
@@ -163,8 +161,8 @@ window.requestAnimationFrame(() => {
         exibeConv.append(quebraLinha)
         exibeConv.append(conversao.high);
         removeData(myChart);
-        //addData(myChart, conversao.code, conversao.low)
-       // addData(myChart, conversao.code, conversao.high)
+        addData(myChart, conversao.code + " - Baixa", conversao.low)
+        addData(myChart, conversao.code+ " - Alta", conversao.high)
         
       }
 
@@ -177,10 +175,11 @@ window.requestAnimationFrame(() => {
     }
     
     function removeData(chart) {
-      console.log(chart.data.labels);
-        chart.data.labels.pop();
+      while(chart.data.labels.length>0){
+        chart.data.labels.pop();      
+      }
         chart.data.datasets.forEach((dataset) => {
-            dataset.data.pop();
+            dataset.data.length=0;
         });
         chart.update();
     }
