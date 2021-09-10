@@ -111,16 +111,17 @@ window.requestAnimationFrame(() => {
               moedasConversao += "BRL";
               break;
           }
+          let secaoExibe = document.querySelector(".exibicao");
           if (moedasConversao.length > 4) {
             let checarMoeda = verificaConversao(moedasConversao);
             if (checarMoeda) {
-              let secaoExibe = document.querySelector(".exibicao");
               secaoExibe.style.visibility = "visible";
               mensagemConversao(
                 moedasConversao.substring(0, moedasConversao.length)
               );
             } else {
               window.alert("Solicitação inválida");
+              secaoExibe.style.visibility = "hidden";
             }
           }
         }
@@ -141,7 +142,6 @@ window.requestAnimationFrame(() => {
             conversao = dados[i];
           }
         }
-        console.log(conversao.ask);
         passagemdeValores(conversao, msg);
       }
 
