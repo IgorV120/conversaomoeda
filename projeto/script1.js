@@ -1,3 +1,22 @@
+function addData(chart, label, data) {
+  chart.data.labels.push(label);
+  chart.data.datasets.forEach((dataset) => {
+      dataset.data.push(data);
+  });
+  chart.update();
+}
+
+function removeData(chart) {
+while(chart.data.labels.length>0){
+  chart.data.labels.pop();      
+}
+  chart.data.datasets.forEach((dataset) => {
+      dataset.data.length=0;
+  });
+  chart.update();
+}
+
+
 window.requestAnimationFrame(() => {
   fetch(
     "https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL,GBP-BRL,USD-EUR,BRL-EUR,GBP-EUR,USD-GBP,BRL-GBP,EUR-GBP,BRL-USD,EUR-USD,GBP-USD"
@@ -47,6 +66,9 @@ window.requestAnimationFrame(() => {
           },
         },
       });
+
+      
+
 
       let btnConverte = document.querySelector("button");
       var moedasConversao;
@@ -163,26 +185,94 @@ window.requestAnimationFrame(() => {
         removeData(myChart);
         addData(myChart, conversao.code + " - Baixa", conversao.low)
         addData(myChart, conversao.code+ " - Alta", conversao.high)
-        
+        criarNovoGrafico()
       }
 
-      function addData(chart, label, data) {
-        chart.data.labels.push(label);
-        chart.data.datasets.forEach((dataset) => {
-            dataset.data.push(data);
-        });
-        chart.update();
-    }
+      function criarNovoGrafico(){
+        let solicita = moedasConversao;
+        solicita=solicita.substring(0, 3)+"-"+solicita.substring(3, 6);
+        var ctx2 = document.getElementById("myChart2").getContext("2d");
+    var myChart2 = new Chart(ctx2, {
+  type: "line",
+  data: {
+    labels: [
+      " - Dólar",
+      " - Euro",
+      " - Libra Esterlina",
+      " - Dólar",
+      " - Euro",
+      " - Libra Esterlina",
+      " - Dólar",
+      " - Euro",
+      " - Libra Esterlina",
+      " - Dólar",
+      " - Euro",
+      " - Libra Esterlina",
+    ],
+    datasets: [
+      {
+        label: "Variação",
+        data: [12, 14, 16,20,45,56,41],
+        backgroundColor: [
+          "rgba(54, 162, 235, 0.6)",
+          "rgba(255, 206, 86, 0.6)",
+          "rgba(75, 192, 192, 0.6)",
+          "rgba(153, 102, 255, 0.6)",
+          "rgba(255, 159, 64, 0.6)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 1)",
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(75, 192, 192, 1)",
+          "rgba(153, 102, 255, 1)",
+          "rgba(255, 159, 64, 1)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  },
+});
+
+        fetch(`https://economia.awesomeapi.com.br/json/daily/${solicita}/30`)
+        .then((res) => res.json())
+        .then((data) => {
+          removeData(myChart2);
+          console.log(data);
+          console.log(data.length)
+          for(let i in data){
+            let extraiObjeto = data[i];
+            let chavesObjeto = Object.keys(extraiObjeto)
+            let valoresObjeto = Object.values(extraiObjeto);
+            for(let j in chavesObjeto){
+              if(chavesObjeto[j]=="high"){
+                console.log(chavesObjeto[j])
+                console.log(valoresObjeto[j])
+                addData(myChart2, chavesObjeto[j], valoresObjeto[j]);
+              }
+            }
+            }
+
+
+
     
-    function removeData(chart) {
-      while(chart.data.labels.length>0){
-        chart.data.labels.pop();      
+
+        })
+        .catch((error)=> console.log("ERROR", error))
+
       }
-        chart.data.datasets.forEach((dataset) => {
-            dataset.data.length=0;
-        });
-        chart.update();
-    }
+
+      
     })
+
+    
     .catch((error) => console.log("ERROR", error));
+
 });
