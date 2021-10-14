@@ -1,21 +1,20 @@
 function addData(chart, label, data) {
   chart.data.labels.push(label);
   chart.data.datasets.forEach((dataset) => {
-      dataset.data.push(data);
+    dataset.data.push(data);
   });
   chart.update();
 }
 
 function removeData(chart) {
-while(chart.data.labels.length>0){
-  chart.data.labels.pop();      
-}
+  while (chart.data.labels.length > 0) {
+    chart.data.labels.pop();
+  }
   chart.data.datasets.forEach((dataset) => {
-      dataset.data.length=0;
+    dataset.data.length = 0;
   });
   chart.update();
 }
-
 
 window.requestAnimationFrame(() => {
   fetch(
@@ -67,29 +66,81 @@ window.requestAnimationFrame(() => {
         },
       });
 
-      
-
+      var ctx2 = document.getElementById("myChart2").getContext("2d");
+      var myChart2 = new Chart(ctx2, {
+        type: "line",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "Variação - Alta",
+              data: [],
+              backgroundColor: [
+                "rgba(54, 162, 235, 0.6)",
+                "rgba(255, 206, 86, 0.6)",
+                "rgba(75, 192, 192, 0.6)",
+                "rgba(153, 102, 255, 0.6)",
+                "rgba(255, 159, 64, 0.6)",
+              ],
+              borderColor: [
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(75, 192, 192, 1)",
+                "rgba(153, 102, 255, 1)",
+                "rgba(255, 159, 64, 1)",
+              ],
+              borderWidth: 1,
+            },
+            {
+              label: "Variação - Baixa",
+              data: [],
+              backgroundColor: [
+                "rgba(54, 162, 235, 0.6)",
+                "rgba(255, 206, 86, 0.6)",
+                "rgba(75, 192, 192, 0.6)",
+                "rgba(153, 102, 255, 0.6)",
+                "rgba(255, 159, 64, 0.6)",
+              ],
+              borderColor: [
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(75, 192, 192, 1)",
+                "rgba(153, 102, 255, 1)",
+                "rgba(255, 159, 64, 1)",
+              ],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
 
       let btnConverte = document.querySelector("button");
       var moedasConversao;
 
       btnConverte.addEventListener("click", () => {
-        
         moedasConversao = "";
-        limpaSecao()
+        limpaSecao();
         exibicaoMoeda();
         moedaSelecionada();
       });
 
-      function limpaSecao(){
+      function limpaSecao() {
         let limpaSection = document.querySelectorAll(".exibicao>section");
-        limpaSection.forEach((secao)=>{
-          secao.innerHTML=""; 
-        })
-        let limpaTitulo=document.querySelector(".exibicao>h4")
-        if(limpaTitulo!=null){
+        limpaSection.forEach((secao) => {
+          secao.innerHTML = "";
+        });
+        let limpaTitulo = document.querySelector(".exibicao>h4");
+        if (limpaTitulo != null) {
           limpaTitulo.remove();
-
         }
       }
 
@@ -167,112 +218,58 @@ window.requestAnimationFrame(() => {
         passagemdeValores(conversao, msg);
       }
 
-      function passagemdeValores(conversao, msg){
+      function passagemdeValores(conversao, msg) {
         let titulo = document.createElement("h4");
-        titulo.innerText=msg.substring(3,6);
-        let exibeTitulo = document.querySelector(".exibicao")
-        exibeTitulo.append(titulo)
+        titulo.innerText = msg.substring(3, 6);
+        let exibeTitulo = document.querySelector(".exibicao");
+        exibeTitulo.append(titulo);
         let exibeBase = document.querySelector(".base>p");
         let exibeConv = document.querySelector(".convertida>p");
-        let quebraLinha = document.createElement("br")
-        let quebraLinha2 = document.createElement("br")
+        let quebraLinha = document.createElement("br");
+        let quebraLinha2 = document.createElement("br");
         exibeBase.append(conversao.code + " - Baixa ");
-        exibeBase.append(quebraLinha2)
+        exibeBase.append(quebraLinha2);
         exibeBase.append(conversao.low);
         exibeConv.append(conversao.code + " - Alta ");
-        exibeConv.append(quebraLinha)
+        exibeConv.append(quebraLinha);
         exibeConv.append(conversao.high);
         removeData(myChart);
-        addData(myChart, conversao.code + " - Baixa", conversao.low)
-        addData(myChart, conversao.code+ " - Alta", conversao.high)
-        criarNovoGrafico()
+        addData(myChart, conversao.code + " - Baixa", conversao.low);
+        addData(myChart, conversao.code + " - Alta", conversao.high);
+        criarNovoGrafico();
       }
 
-      function criarNovoGrafico(){
+      function criarNovoGrafico() {
         let solicita = moedasConversao;
-        solicita=solicita.substring(0, 3)+"-"+solicita.substring(3, 6);
-        var ctx2 = document.getElementById("myChart2").getContext("2d");
-    var myChart2 = new Chart(ctx2, {
-  type: "line",
-  data: {
-    labels: [
-      " - Dólar",
-      " - Euro",
-      " - Libra Esterlina",
-      " - Dólar",
-      " - Euro",
-      " - Libra Esterlina",
-      " - Dólar",
-      " - Euro",
-      " - Libra Esterlina",
-      " - Dólar",
-      " - Euro",
-      " - Libra Esterlina",
-    ],
-    datasets: [
-      {
-        label: "Variação",
-        data: [12, 14, 16,20,45,56,41],
-        backgroundColor: [
-          "rgba(54, 162, 235, 0.6)",
-          "rgba(255, 206, 86, 0.6)",
-          "rgba(75, 192, 192, 0.6)",
-          "rgba(153, 102, 255, 0.6)",
-          "rgba(255, 159, 64, 0.6)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  },
-  options: {
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  },
-});
+        solicita = solicita.substring(0, 3) + "-" + solicita.substring(3, 6);
 
         fetch(`https://economia.awesomeapi.com.br/json/daily/${solicita}/30`)
-        .then((res) => res.json())
-        .then((data) => {
-          removeData(myChart2);
-          console.log(data);
-          console.log(data.length)
-          for(let i in data){
-            let extraiObjeto = data[i];
-            let chavesObjeto = Object.keys(extraiObjeto)
-            let valoresObjeto = Object.values(extraiObjeto);
-            for(let j in chavesObjeto){
-              if(chavesObjeto[j]=="high"){
-                console.log(chavesObjeto[j])
-                console.log(valoresObjeto[j])
-                addData(myChart2, chavesObjeto[j], valoresObjeto[j]);
+          .then((res) => res.json())
+          .then((data) => {
+           
+            /*if (chavesObjeto[j] == "timestamp") {
+                  let dia=valoresObjeto[j]
+                  dia=parseInt(dia)
+                  let diaNovo = new Date(dia)
+                  diaNovo=diaNovo.toLocaleString();
+                  console.log(diaNovo)}*/
+
+            removeData(myChart2);
+            for (let i in data) {
+              let extraiObjeto = data[i];
+              let chavesObjeto = Object.keys(extraiObjeto);
+              console.log(chavesObjeto);
+              let valoresObjeto = Object.values(extraiObjeto);
+              for (let j in chavesObjeto) {
+                if (chavesObjeto[j] == "high") {
+                  addData(myChart2, "Alta - "+solicita.substring(0,3), valoresObjeto[j]);
+                }
               }
             }
-            }
-
-
-
-    
-
-        })
-        .catch((error)=> console.log("ERROR", error))
-
+          })
+          .catch((error) => console.log("ERROR", error));
       }
-
-      
     })
 
-    
     .catch((error) => console.log("ERROR", error));
-
 });
