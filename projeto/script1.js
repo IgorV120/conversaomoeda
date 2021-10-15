@@ -1,8 +1,21 @@
 function addData(chart, label, data) {
+    chart.data.labels.push(label);
+    chart.data.datasets.forEach((dataset) => {
+      dataset.data.push(data);
+    });
+
+  chart.update();
+}
+function addDataLine(chart, label, data1, id1, data2, id2) {
   chart.data.labels.push(label);
-  chart.data.datasets.forEach((dataset) => {
-    dataset.data.push(data);
-  });
+  chart.data.datasets.forEach((dataset) =>{
+  if(dataset.id==id1){
+      dataset.data.push(data1)  
+  }
+  if(dataset.id==id2){
+    dataset.data.push(data2)
+  }
+    })
   chart.update();
 }
 
@@ -70,45 +83,36 @@ window.requestAnimationFrame(() => {
       var myChart2 = new Chart(ctx2, {
         type: "line",
         data: {
-          labels: [],
+          labels: ["A","B","C","D"],
           datasets: [
             {
+              id:1,
               label: "Variação - Alta",
-              data: [],
+              data: [1,23,15,12],
               backgroundColor: [
-                "rgba(54, 162, 235, 0.6)",
-                "rgba(255, 206, 86, 0.6)",
-                "rgba(75, 192, 192, 0.6)",
-                "rgba(153, 102, 255, 0.6)",
-                "rgba(255, 159, 64, 0.6)",
+                "rgba(99, 132, 255, 1)",  
+                  
               ],
               borderColor: [
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(75, 192, 192, 1)",
-                "rgba(153, 102, 255, 1)",
-                "rgba(255, 159, 64, 1)",
+                "rgba(99, 132, 255, 1)",
+                ,
+               
               ],
               borderWidth: 1,
             },
             {
+              id:2,
               label: "Variação - Baixa",
-              data: [],
+              data: [2,21,14,11],
               backgroundColor: [
-                "rgba(54, 162, 235, 0.6)",
-                "rgba(255, 206, 86, 0.6)",
-                "rgba(75, 192, 192, 0.6)",
-                "rgba(153, 102, 255, 0.6)",
-                "rgba(255, 159, 64, 0.6)",
+                
+                "rgba(255, 99, 132, 1)",
+                
               ],
               borderColor: [
-                "rgba(255, 99, 132, 1)",
-                "rgba(54, 162, 235, 1)",
-                "rgba(255, 206, 86, 1)",
-                "rgba(75, 192, 192, 1)",
-                "rgba(153, 102, 255, 1)",
-                "rgba(255, 159, 64, 1)",
+                
+                "rgba(255, 99, 132, 1)"
+               
               ],
               borderWidth: 1,
             },
@@ -117,7 +121,7 @@ window.requestAnimationFrame(() => {
         options: {
           scales: {
             y: {
-              beginAtZero: true,
+              beginAtZero: false,
             },
           },
         },
@@ -260,9 +264,21 @@ window.requestAnimationFrame(() => {
               let chavesObjeto = Object.keys(extraiObjeto);
               console.log(chavesObjeto);
               let valoresObjeto = Object.values(extraiObjeto);
+              let valorAlta=0;
+              let valorBaixa=0;
               for (let j in chavesObjeto) {
                 if (chavesObjeto[j] == "high") {
-                  addData(myChart2, "Alta - "+solicita.substring(0,3), valoresObjeto[j]);
+                  valorAlta=valoresObjeto[j];
+                 // addDataLine(myChart2, "Alta - "+solicita.substring(0,3), valoresObjeto[j], 1);
+                }
+                 if (chavesObjeto[j] == "low") {
+                  valorBaixa=valoresObjeto[j]
+                  //addDataLine(myChart2, "Baixa - "+solicita.substring(0,3), valoresObjeto[j], 2);
+                }
+                if(valorAlta !=0 && valorBaixa !=0){
+                  addDataLine(myChart2, solicita.substring(0,3), valorAlta, 1, valorBaixa, 2)
+                  valorBaixa =0;
+                  valorAlta =0;
                 }
               }
             }
